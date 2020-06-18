@@ -31,11 +31,15 @@ function init() {
     // document.body.appendChild( renderer.domElement );
     document.getElementById('webgl').appendChild(renderer.domElement);
 
-    renderer.render( scene, camera );
-    // renderer.render(
-    //     scene,
-    //     camera
-    // );
+    // renderer.render( scene, camera );
+    // // renderer.render(
+    // //     scene,
+    // //     camera
+    // // );
+
+    update(renderer, scene, camera);
+
+    return scene;
 
 }
 
@@ -66,5 +70,13 @@ function getPlane(size) {
     return mesh;
 }
 
+function update(renderer, scene, camera) {
+    renderer.render( scene, camera );
 
-init();
+    requestAnimationFrame(function () {
+        update(renderer, scene, camera);
+    })
+}
+
+
+var scene = init();
