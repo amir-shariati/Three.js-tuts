@@ -9,7 +9,9 @@ function init() {
     box.position.y = box.geometry.parameters.height/2;
     plane.rotation.x = Math.PI/2 ;
 
-    scene.add(box);
+    plane.name = 'plane-1';
+
+    plane.add(box);
     scene.add(plane);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -72,6 +74,9 @@ function getPlane(size) {
 
 function update(renderer, scene, camera) {
     renderer.render( scene, camera );
+
+    var plane = scene.getObjectByName('plane-1');
+    plane.rotation.z += 0.0005;
 
     requestAnimationFrame(function () {
         update(renderer, scene, camera);
