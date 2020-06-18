@@ -4,8 +4,13 @@ function init() {
     var scene = new THREE.Scene();
 
     var box = getBox(1, 1, 1);
+    var plane = getPlane(4);
+
+    box.position.y = box.geometry.parameters.height/2;
+    plane.rotation.x = Math.PI/2 ;
 
     scene.add(box);
+    scene.add(plane);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
     var camera = new THREE.PerspectiveCamera(
@@ -46,5 +51,20 @@ function getBox(width, height, depth) {
 
     return mesh;
 }
+
+function getPlane(size) {
+    var geometry = new THREE.PlaneGeometry(size, size);
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        side: THREE.DoubleSide
+    });
+    var mesh = new THREE.Mesh(
+        geometry,
+        material
+    );
+
+    return mesh;
+}
+
 
 init();
