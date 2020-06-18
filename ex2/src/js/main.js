@@ -78,6 +78,15 @@ function update(renderer, scene, camera) {
     var plane = scene.getObjectByName('plane-1');
     plane.rotation.z += 0.0005;
 
+    scene.traverse(function (child) {
+        child.scale.x += 0.001;
+
+        console.log('scale is : ' + child.scale.x);
+        if (child.scale.x >= 1.3){
+            child.scale.x = 1;
+        }
+    })
+
     requestAnimationFrame(function () {
         update(renderer, scene, camera);
     })
