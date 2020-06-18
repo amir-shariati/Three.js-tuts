@@ -3,15 +3,18 @@ function init() {
 
     var scene = new THREE.Scene();
 
+    scene.fog = new THREE.FogExp2(0xffffff, 0.2);
+
     var box = getBox(1, 1, 1);
-    var plane = getPlane(4);
+    var plane = getPlane(20);
 
     box.position.y = box.geometry.parameters.height/2;
     plane.rotation.x = Math.PI/2 ;
 
     plane.name = 'plane-1';
 
-    plane.add(box);
+    // plane.add(box);
+    scene.add(box);
     scene.add(plane);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -30,6 +33,7 @@ function init() {
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setClearColor('#ffffff')
     // document.body.appendChild( renderer.domElement );
     document.getElementById('webgl').appendChild(renderer.domElement);
 
@@ -75,17 +79,17 @@ function getPlane(size) {
 function update(renderer, scene, camera) {
     renderer.render( scene, camera );
 
-    var plane = scene.getObjectByName('plane-1');
-    plane.rotation.z += 0.0005;
-
-    scene.traverse(function (child) {
-        child.scale.x += 0.001;
-
-        console.log('scale is : ' + child.scale.x);
-        if (child.scale.x >= 1.3){
-            child.scale.x = 1;
-        }
-    })
+    // var plane = scene.getObjectByName('plane-1');
+    // plane.rotation.z += 0.0005;
+    //
+    // scene.traverse(function (child) {
+    //     child.scale.x += 0.001;
+    //
+    //     console.log('scale is : ' + child.scale.x);
+    //     if (child.scale.x >= 1.3){
+    //         child.scale.x = 1;
+    //     }
+    // })
 
     requestAnimationFrame(function () {
         update(renderer, scene, camera);
