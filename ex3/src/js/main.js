@@ -2,6 +2,7 @@
 function init() {
 
     var scene = new THREE.Scene();
+    var gui = new dat.GUI();
 
     var enableFog = false;
     if (enableFog){
@@ -18,6 +19,12 @@ function init() {
     plane.rotation.x = Math.PI/2 ;
 
     pointLight.position.y = 2;
+    pointLight.intensity = 2;
+
+    gui.add(pointLight, 'intensity', 1, 10);
+    gui.add(pointLight.position, 'y', 1, 5);
+    gui.add(pointLight.position, 'x', -5, 5);
+    gui.add(pointLight.position, 'z', -5, 5);
 
     plane.name = 'plane-1';
 
