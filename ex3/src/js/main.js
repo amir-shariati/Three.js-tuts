@@ -62,7 +62,9 @@ function init() {
     // //     camera
     // // );
 
-    update(renderer, scene, camera);
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    update(renderer, scene, camera, controls);
 
     return scene;
 
@@ -124,7 +126,7 @@ function getPointLight(intensity) {
     return light;
 }
 
-function update(renderer, scene, camera) {
+function update(renderer, scene, camera, controls) {
     renderer.render( scene, camera );
 
     // var plane = scene.getObjectByName('plane-1');
@@ -139,8 +141,10 @@ function update(renderer, scene, camera) {
     //     }
     // })
 
+    controls.update();
+
     requestAnimationFrame(function () {
-        update(renderer, scene, camera);
+        update(renderer, scene, camera, controls);
     })
 }
 
