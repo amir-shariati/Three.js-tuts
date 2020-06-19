@@ -10,12 +10,14 @@ function init() {
     }
 
 
-    var box = getBox(1, 1, 1);
+    // var box = getBox(1, 1, 1);
+    var boxGrid = getBoxGrid(10, 1.5);
+
     var plane = getPlane(20);
     var pointLight = getPointLight(1);
     var sphere = getSphere(0.05);
 
-    box.position.y = box.geometry.parameters.height/2;
+    // box.position.y = box.geometry.parameters.height/2;
     plane.rotation.x = Math.PI/2 ;
 
     pointLight.position.y = 2;
@@ -29,11 +31,12 @@ function init() {
     plane.name = 'plane-1';
 
     // plane.add(box);
-    scene.add(box);
+    // scene.add(box);
     scene.add(plane);
 
     pointLight.add(sphere);
     scene.add(pointLight);
+    scene.add(boxGrid);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
     var camera = new THREE.PerspectiveCamera(
@@ -88,6 +91,29 @@ function getBox(width, height, depth) {
     mesh.castShadow = true;
 
     return mesh;
+}
+
+function getBoxGrid(amount, separationMultiplier) {
+    var group = new THREE.Group();
+
+    for (var i=0; i < amount; i++){
+        var obj = getBox(1,1,1);
+        obj.position.x = i * separationMultiplier;
+        obj.position.y = obj.geometry.parameters.height/2;
+        group.add(obj);
+        for (var j=0; j < amount; j++){
+            var obj = getBox(1,1,1);
+            obj.position.x = i * separationMultiplier;
+            obj.position.y = obj.geometry.parameters.height/2;
+            obj.position.z = j * separationMultiplier;
+            group.add(obj);
+        }
+    }
+
+    group.position.x = -(separationMultiplier * (amount-1))/2;
+    group.position.z = -(separationMultiplier * (amount-1))/2;
+
+    return group;
 }
 
 function getPlane(size) {
