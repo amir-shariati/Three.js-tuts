@@ -14,19 +14,29 @@ function init() {
     var boxGrid = getBoxGrid(10, 1.5);
 
     var plane = getPlane(20);
-    var pointLight = getPointLight(1);
+
+    // var pointLight = getPointLight(1);
+    var spotLight = getSpotLight(1);
+
     var sphere = getSphere(0.05);
 
     // box.position.y = box.geometry.parameters.height/2;
     plane.rotation.x = Math.PI/2 ;
 
-    pointLight.position.y = 2;
-    pointLight.intensity = 2;
+    // pointLight.position.y = 2;
+    // pointLight.intensity = 2;
+    spotLight.position.y = 2;
+    spotLight.intensity = 2;
 
-    gui.add(pointLight, 'intensity', 1, 10);
-    gui.add(pointLight.position, 'y', 1, 5);
-    gui.add(pointLight.position, 'x', -5, 5);
-    gui.add(pointLight.position, 'z', -5, 5);
+    // gui.add(pointLight, 'intensity', 1, 10);
+    // gui.add(pointLight.position, 'y', 1, 5);
+    // gui.add(pointLight.position, 'x', -5, 5);
+    // gui.add(pointLight.position, 'z', -5, 5);
+    gui.add(spotLight, 'intensity', 1, 10);
+    gui.add(spotLight.position, 'y', 1, 20);
+    gui.add(spotLight.position, 'x', -5, 20);
+    gui.add(spotLight.position, 'z', -5, 20);
+    gui.add(spotLight, 'penumbra', 0, 1);
 
     plane.name = 'plane-1';
 
@@ -34,8 +44,11 @@ function init() {
     // scene.add(box);
     scene.add(plane);
 
-    pointLight.add(sphere);
-    scene.add(pointLight);
+    // pointLight.add(sphere);
+    // scene.add(pointLight);
+    spotLight.add(sphere);
+    scene.add(spotLight);
+
     scene.add(boxGrid);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -153,6 +166,18 @@ function getSphere(size) {
 function getPointLight(intensity) {
     var light = new THREE.PointLight(0xffffff, intensity);
     light.castShadow = true;
+
+    return light;
+}
+
+function getSpotLight(intensity) {
+    var light = new THREE.SpotLight(0xffffff, intensity);
+    light.castShadow = true;
+
+    light.shadow.bias = 0.001
+
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
 
     return light;
 }
