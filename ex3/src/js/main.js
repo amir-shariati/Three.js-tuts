@@ -199,6 +199,11 @@ function getDirectionalLight(intensity) {
     var light = new THREE.DirectionalLight(0xffffff, intensity);
     light.castShadow = true;
 
+    light.shadow.camera.left = -10;
+    light.shadow.camera.right = 10;
+    light.shadow.camera.top = 10;
+    light.shadow.camera.bottom = -10;
+
     return light;
 }
 
