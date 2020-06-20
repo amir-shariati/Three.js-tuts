@@ -64,9 +64,17 @@ function init() {
     scene.add(ambientLight);
 
     // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-    var camera = new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth / window.innerHeight,
+    // var camera = new THREE.PerspectiveCamera(
+    //     45,
+    //     window.innerWidth / window.innerHeight,
+    //     1,
+    //     1000
+    // );
+    var camera = new THREE.OrthographicCamera(
+        -15,
+        15,
+        15,
+        -15,
         1,
         1000
     );
