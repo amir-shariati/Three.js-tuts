@@ -231,8 +231,11 @@ function update(renderer, scene, camera, controls, clock) {
     var timeElapsed = clock.getElapsedTime();
 
     var boxGrid = scene.getObjectByName('boxGrid');
+
     boxGrid.children.forEach(function (child, index) {
-        child.scale.y = Math.abs(Math.sin(timeElapsed * 2 + index)) + 0.002;
+        var x = timeElapsed * 2 + index
+        // child.scale.y = Math.abs(Math.sin(timeElapsed * 2 + index)) + 0.002;
+        child.scale.y = Math.abs(noise.simplex2(x, x)) + 0.002;
         child.position.y = child.scale.y/2;
     });
 
