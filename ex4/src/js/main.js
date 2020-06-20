@@ -46,6 +46,7 @@ function init() {
     gui.add(directionalLight.position, 'z', -20, 20);
 
     plane.name = 'plane-1';
+    boxGrid.name= 'boxGrid';
 
     // plane.add(box);
     // scene.add(box);
@@ -225,6 +226,12 @@ function update(renderer, scene, camera, controls) {
     //         child.scale.x = 1;
     //     }
     // })
+
+    var boxGrid = scene.getObjectByName('boxGrid');
+    boxGrid.children.forEach(function (child) {
+        child.scale.y = Math.random();
+        child.position.y = child.scale.y/2;
+    });
 
     controls.update();
 
