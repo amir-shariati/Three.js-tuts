@@ -63,27 +63,26 @@ function init() {
     scene.add(helper);
     scene.add(ambientLight);
 
-    // var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-    // var camera = new THREE.PerspectiveCamera(
-    //     45,
-    //     window.innerWidth / window.innerHeight,
-    //     1,
-    //     1000
-    // );
-    var camera = new THREE.OrthographicCamera(
-        -15,
-        15,
-        15,
-        -15,
+    var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+    var camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
         1,
         1000
     );
 
-    camera.position.x = 1 ;
-    camera.position.y = 2 ;
-    camera.position.z = 5 ;
+    var cameraZPosition = new THREE.Group();
+    var cameraXRotation = new THREE.Group();
+    var cameraYRotation = new THREE.Group();
+    cameraZPosition.add(camera);
+    cameraXRotation.add(cameraZPosition);
+    cameraYRotation.add(cameraXRotation);
+    // scene.add(cameraZPosition);
+    scene.add(cameraYRotation);
 
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    gui.add(cameraZPosition.position, 'z', 0 , 100);
+    gui.add(cameraYRotation.rotation, 'y', -Math.PI , Math.PI);
+    gui.add(cameraXRotation.rotation, 'x', -Math.PI , Math.PI);
 
     var renderer = new THREE.WebGLRenderer();
     renderer.shadowMap.enabled = true;
