@@ -5,99 +5,74 @@ function init() {
     var gui = new dat.GUI();
     var clock = new THREE.Clock();
 
-    var enableFog = false;
-    if (enableFog){
-        scene.fog = new THREE.FogExp2(0xffffff, 0.2);
-    }
+    // var enableFog = false;
+    // if (enableFog){
+    //     scene.fog = new THREE.FogExp2(0xffffff, 0.2);
+    // }
+    var planeMaterial = getMaterial('lambert', 'rgb(0, 0, 255)');
+    var plane = getPlane(planeMaterial,30);
 
 
-    // var box = getBox(1, 1, 1);
-    var boxGrid = getBoxGrid(10, 1.5);
-    var plane = getPlane(20);
-    // var pointLight = getPointLight(1);
-    // var spotLight = getSpotLight(1);
-    var directionalLight = getDirectionalLight(1);
-    var sphere = getSphere(0.05);
-    var helper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    var ambientLight = new getAmbientLight(2);
+    var sphereMaterial = getMaterial('lambert', 'rgb(255, 0, 0)');
+    var sphere = getSphere(sphereMaterial, 1, 24);
+
+    var lightLeft = getSpotLight(1, 'rgb(255, 220, 180)');
+    var lightRight = getSpotLight(1, 'rgb(255, 220, 180)');
 
 
-    // box.position.y = box.geometry.parameters.height/2;
+    // manipulae objects
     plane.rotation.x = Math.PI/2 ;
+    sphere.position.y = sphere.geometry.parameters.radius;
 
-    // pointLight.position.y = 2;
-    // pointLight.intensity = 2;
-    // spotLight.position.y = 2;
-    // spotLight.intensity = 2;
-    directionalLight.position.y = 2;
-    directionalLight.intensity = 2;
+    lightLeft.position.x = -5;
+    lightLeft.position.y = 2 ;
+    lightLeft.position.z = -4;
 
-    // gui.add(pointLight, 'intensity', 1, 10);
-    // gui.add(pointLight.position, 'y', 1, 5);
-    // gui.add(pointLight.position, 'x', -5, 5);
-    // gui.add(pointLight.position, 'z', -5, 5);
-    // gui.add(spotLight, 'intensity', 1, 10);
-    // gui.add(spotLight.position, 'y', 1, 20);
-    // gui.add(spotLight.position, 'x', -5, 20);
-    // gui.add(spotLight.position, 'z', -5, 20);
-    // gui.add(spotLight, 'penumbra', 0, 1);
-    gui.add(directionalLight, 'intensity', 1, 10);
-    gui.add(directionalLight.position, 'y', 1, 20);
-    gui.add(directionalLight.position, 'x', -5, 20);
-    gui.add(directionalLight.position, 'z', -20, 20);
+    lightRight.position.x = 5;
+    lightRight.position.y = 2;
+    lightRight.position.z = -4;
 
     plane.name = 'plane-1';
-    boxGrid.name= 'boxGrid';
 
-    // plane.add(box);
-    // scene.add(box);
+    // dat.gui
+    var folder1 = gui.addFolder('light_1');
+    folder1.add(lightLeft, 'intensity', 0, 10);
+    folder1.add(lightLeft.position, 'x', -5, 15);
+    folder1.add(lightLeft.position, 'y', -5, 15);
+    folder1.add(lightLeft.position, 'z', -5, 15);
+
+    var folder2 = gui.addFolder('light_2');
+    folder2.add(lightRight, 'intensity', 0, 10);
+    folder2.add(lightRight.position, 'x', -5, 15);
+    folder2.add(lightRight.position, 'y', -5, 15);
+    folder2.add(lightRight.position, 'z', -5, 15);
+
+    // add objects to the scene
+    scene.add(sphere);
     scene.add(plane);
+    scene.add(lightLeft);
+    scene.add(lightRight);
 
-    // pointLight.add(sphere);
-    // scene.add(pointLight);
-    // spotLight.add(sphere);
-    // scene.add(spotLight);
-    directionalLight.add(sphere);
-    scene.add(directionalLight);
-    scene.add(boxGrid);
-    scene.add(helper);
-    scene.add(ambientLight);
-
-    var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+    // camera
     var camera = new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth / window.innerHeight,
-        1,
-        1000
+        45, // field of view
+        window.innerWidth / window.innerHeight, // aspect ratio
+        1, // near clipping plane
+        1000 // far clipping plane
     );
-
-    var cameraZPosition = new THREE.Group();
-    var cameraXRotation = new THREE.Group();
-    var cameraYRotation = new THREE.Group();
-    cameraZPosition.add(camera);
-    cameraXRotation.add(cameraZPosition);
-    cameraYRotation.add(cameraXRotation);
-    // scene.add(cameraZPosition);
-    scene.add(cameraYRotation);
-
-    gui.add(cameraZPosition.position, 'z', 0 , 100);
-    gui.add(cameraYRotation.rotation, 'y', -Math.PI , Math.PI);
-    gui.add(cameraXRotation.rotation, 'x', -Math.PI , Math.PI);
+    camera.position.z = 7;
+    camera.position.x = -2;
+    camera.position.y = 7;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     var renderer = new THREE.WebGLRenderer();
     renderer.shadowMap.enabled = true;
 
     renderer.setSize( window.innerWidth, window.innerHeight );
-    // renderer.setClearColor('#ffffff')
-    renderer.setClearColor('rgb(120, 120, 120)')
+
+    renderer.setClearColor('rgb(120, 120, 120)');
     // document.body.appendChild( renderer.domElement );
     document.getElementById('webgl').appendChild(renderer.domElement);
-
-    // renderer.render( scene, camera );
-    // // renderer.render(
-    // //     scene,
-    // //     camera
-    // // );
 
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -148,38 +123,29 @@ function getBoxGrid(amount, separationMultiplier) {
     return group;
 }
 
-function getPlane(size) {
+function getPlane(material, size) {
     var geometry = new THREE.PlaneGeometry(size, size);
-    // var material = new THREE.MeshBasicMaterial({
-    //     color: 0xff0000,
-    //     side: THREE.DoubleSide
-    // });
-    var material = new THREE.MeshPhongMaterial({
-        color: 'rgb(120, 120, 120)',
-        side: THREE.DoubleSide
-    });
+    material.side = THREE.DoubleSide;
 
-    var mesh = new THREE.Mesh(
+    var obj = new THREE.Mesh(
         geometry,
         material
     );
-    mesh.receiveShadow = true;
+    obj.receiveShadow = true;
 
-    return mesh;
+    return obj;
 }
 
-function getSphere(size) {
-    var geometry = new THREE.SphereGeometry(size, 24, 24);
-    var material = new THREE.MeshBasicMaterial({
-        color: 'rgb(255, 255, 255)'
-    });
+function getSphere(material, size, segments) {
+    var geometry = new THREE.SphereGeometry(size, segments, segments);
 
-    var mesh = new THREE.Mesh(
+    var obj = new THREE.Mesh(
         geometry,
         material
     );
+    obj.castShadow = true;
 
-    return mesh;
+    return obj;
 }
 
 function getPointLight(intensity) {
@@ -189,14 +155,17 @@ function getPointLight(intensity) {
     return light;
 }
 
-function getSpotLight(intensity) {
-    var light = new THREE.SpotLight(0xffffff, intensity);
+function getSpotLight(intensity, color) {
+    color = color === undefined ? 'rgb(255, 255, 255)' : color;
+    var light = new THREE.SpotLight(color, intensity);
     light.castShadow = true;
+    light.penumbra = 0.5;
 
+
+    //Set up shadow properties for the light
+    light.shadow.mapSize.width = 1024; //defualt: 512
+    light.shadow.mapSize.height = 1024; //defualt: 512
     light.shadow.bias = 0.001
-
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
 
     return light;
 }
@@ -220,6 +189,32 @@ function getAmbientLight(intensity) {
     return light;
 }
 
+function getMaterial(type, color) {
+    var selectMaterial;
+    var materialOptions = {
+        color: color === undefined ? 'rqb(255, 255, 255)' : color,
+    };
+    switch (type) {
+        case 'basic':
+            selectMaterial = new THREE.MeshBasicMaterial(materialOptions);
+            break;
+        case 'lambert':
+            selectMaterial = new THREE.MeshLambertMaterial(materialOptions);
+            break;
+        case 'phong':
+            selectMaterial = new THREE.MeshPhongMaterial(materialOptions);
+            break;
+        case 'standard':
+            selectMaterial = new THREE.MeshStandardMaterial(materialOptions);
+            break;
+        default:
+            selectMaterial = new THREE.MeshBasicMaterial(materialOptions);
+            break;
+    }
+    return selectMaterial;
+
+}
+
 function update(renderer, scene, camera, controls, clock) {
     renderer.render( scene, camera );
 
@@ -237,14 +232,14 @@ function update(renderer, scene, camera, controls, clock) {
 
     var timeElapsed = clock.getElapsedTime();
 
-    var boxGrid = scene.getObjectByName('boxGrid');
-
-    boxGrid.children.forEach(function (child, index) {
-        var x = timeElapsed * 2 + index
-        // child.scale.y = Math.abs(Math.sin(timeElapsed * 2 + index)) + 0.002;
-        child.scale.y = Math.abs(noise.simplex2(x, x)) + 0.002;
-        child.position.y = child.scale.y/2;
-    });
+    // var boxGrid = scene.getObjectByName('boxGrid');
+    //
+    // boxGrid.children.forEach(function (child, index) {
+    //     var x = timeElapsed * 2 + index
+    //     // child.scale.y = Math.abs(Math.sin(timeElapsed * 2 + index)) + 0.002;
+    //     child.scale.y = Math.abs(noise.simplex2(x, x)) + 0.002;
+    //     child.position.y = child.scale.y/2;
+    // });
 
     controls.update();
 
