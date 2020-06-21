@@ -36,9 +36,16 @@ function init() {
     var loader = new THREE.TextureLoader();
     planeMaterial.map = loader.load('../../assets/textures/concrete.JPG');
     planeMaterial.bumpMap = loader.load('../../assets/textures/concrete.JPG');
+    planeMaterial.roughnessMap = loader.load('../../assets/textures/concrete.JPG');
+    // planeMaterial.map = loader.load('../../assets/textures/checkerboard.jpg');
+    // planeMaterial.bumpMap = loader.load('../../assets/textures/checkerboard.jpg');
+    // planeMaterial.roughnessMap = loader.load('../../assets/textures/checkerboard.jpg');
     planeMaterial.bumpScale = 0.01;
+    planeMaterial.metalness = 0.1;
+    planeMaterial.roughness = 0.7;
+    sphereMaterial.roughnessMap = loader.load('../../assets/textures/fingerprints.jpg');
 
-    var maps = ['map', 'bumpMap'];
+    var maps = ['map', 'bumpMap', 'roughnessMap'];
     maps.forEach(function (mapName) {
         var texture = planeMaterial[mapName];
         texture.wrapS = THREE.RepeatWrapping;
