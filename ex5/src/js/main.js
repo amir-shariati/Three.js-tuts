@@ -9,11 +9,11 @@ function init() {
     // if (enableFog){
     //     scene.fog = new THREE.FogExp2(0xffffff, 0.2);
     // }
-    var planeMaterial = getMaterial('lambert', 'rgb(0, 0, 255)');
+    var planeMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
     var plane = getPlane(planeMaterial,30);
 
 
-    var sphereMaterial = getMaterial('lambert', 'rgb(255, 0, 0)');
+    var sphereMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
     var sphere = getSphere(sphereMaterial, 1, 24);
 
     var lightLeft = getSpotLight(1, 'rgb(255, 220, 180)');
@@ -46,6 +46,11 @@ function init() {
     folder2.add(lightRight.position, 'x', -5, 15);
     folder2.add(lightRight.position, 'y', -5, 15);
     folder2.add(lightRight.position, 'z', -5, 15);
+
+    var folder3 = gui.addFolder('materials');
+    folder3.add(sphereMaterial, 'shininess', 0, 1000);
+    folder3.add(planeMaterial, 'shininess', 0, 1000);
+    folder3.open();
 
     // add objects to the scene
     scene.add(sphere);
@@ -163,9 +168,9 @@ function getSpotLight(intensity, color) {
 
 
     //Set up shadow properties for the light
-    light.shadow.mapSize.width = 1024; //defualt: 512
-    light.shadow.mapSize.height = 1024; //defualt: 512
-    light.shadow.bias = 0.001
+    light.shadow.mapSize.width = 2048; //defualt: 512
+    light.shadow.mapSize.height = 2048; //defualt: 512
+    light.shadow.bias = 0.001;
 
     return light;
 }
