@@ -9,11 +9,11 @@ function init() {
     // if (enableFog){
     //     scene.fog = new THREE.FogExp2(0xffffff, 0.2);
     // }
-    var planeMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
+    var planeMaterial = getMaterial('standard', 'rgb(255, 255, 255)');
     var plane = getPlane(planeMaterial,30);
 
 
-    var sphereMaterial = getMaterial('phong', 'rgb(255, 255, 255)');
+    var sphereMaterial = getMaterial('standard', 'rgb(255, 255, 255)');
     var sphere = getSphere(sphereMaterial, 1, 24);
 
     var lightLeft = getSpotLight(1, 'rgb(255, 220, 180)');
@@ -32,6 +32,20 @@ function init() {
     lightRight.position.y = 2;
     lightRight.position.z = -4;
 
+    //manipulate material
+    var loader = new THREE.TextureLoader();
+    planeMaterial.map = loader.load('../../assets/textures/concrete.JPG');
+    planeMaterial.bumpMap = loader.load('../../assets/textures/concrete.JPG');
+    planeMaterial.bumpScale = 0.01;
+
+    var maps = ['map', 'bumpMap'];
+    maps.forEach(function (mapName) {
+        var texture = planeMaterial[mapName];
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1.5, 1.5);
+    });
+
     plane.name = 'plane-1';
 
     // dat.gui
@@ -48,8 +62,12 @@ function init() {
     folder2.add(lightRight.position, 'z', -5, 15);
 
     var folder3 = gui.addFolder('materials');
-    folder3.add(sphereMaterial, 'shininess', 0, 1000);
-    folder3.add(planeMaterial, 'shininess', 0, 1000);
+    // folder3.add(sphereMaterial, 'shininess', 0, 1000);
+    // folder3.add(planeMaterial, 'shininess', 0, 1000);
+    folder3.add(sphereMaterial, 'roughness', 0, 1);
+    folder3.add(planeMaterial, 'roughness', 0, 1);
+    folder3.add(sphereMaterial, 'metalness', 0, 1);
+    folder3.add(planeMaterial, 'metalness', 0, 1);
     folder3.open();
 
     // add objects to the scene
