@@ -10,7 +10,7 @@ function init() {
     //     scene.fog = new THREE.FogExp2(0xffffff, 0.2);
     // }
     var planeMaterial = getMaterial('standard', 'rgb(255, 255, 255)');
-    var plane = getPlane(planeMaterial,30);
+    var plane = getPlane(planeMaterial,300);
 
 
     var sphereMaterial = getMaterial('standard', 'rgb(255, 255, 255)');
@@ -33,6 +33,26 @@ function init() {
     lightRight.position.z = -4;
 
     //manipulate material
+    // Load the cube map
+    var path = '../../assets/cubemap/';
+    var format = '.jpg';
+    // var urls = [
+    //     path + 'px' + format, path + 'nx' + format,
+    //     path + 'py' + format, path + 'ny' + format,
+    //     path + 'pz' + format, path + 'nz' + format
+    // ];
+    var urls = [
+        path + 'px' + format, path + 'nx' + format,
+        path + 'py' + format, path + 'ny' + format,
+        path + 'pz' + format, path + 'nz' + format
+    ];
+    // var reflectionCube = new THREE.CubeTextureLoader().load(urls);
+    // reflectionCube.format = THREE.RGBFormat;
+    var reflectionCube = new THREE.CubeTextureLoader().load(urls);
+    reflectionCube.format = THREE.RGBFormat;
+
+    scene.background = reflectionCube;
+
     var loader = new THREE.TextureLoader();
     planeMaterial.map = loader.load('../../assets/textures/concrete.JPG');
     planeMaterial.bumpMap = loader.load('../../assets/textures/concrete.JPG');
@@ -43,14 +63,16 @@ function init() {
     planeMaterial.bumpScale = 0.01;
     planeMaterial.metalness = 0.1;
     planeMaterial.roughness = 0.7;
+    planeMaterial.envMap = reflectionCube;
     sphereMaterial.roughnessMap = loader.load('../../assets/textures/fingerprints.jpg');
+    sphereMaterial.envMap = reflectionCube;
 
     var maps = ['map', 'bumpMap', 'roughnessMap'];
     maps.forEach(function (mapName) {
         var texture = planeMaterial[mapName];
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1.5, 1.5);
+        texture.repeat.set(15, 15);
     });
 
     plane.name = 'plane-1';
